@@ -10,37 +10,58 @@ declare var gapi: any;
 export class GoogleCalendarService {
 
   constructor() { }
+  gapiLoaded: boolean;
 
   getCalendarEvents(eventType: string): Promise<Array<GoogleEvent>> {
 
     return new Promise<Array<GoogleEvent>>((resolve, reject) => {
-      gapi.load("client", () => {
-        this.initClient()
-          .then(() => {
-            gapi.client.calendar.events.list({
-              'calendarId': environment.gapiConfig.calendarId,
-              'showDeleted': false,
-              'singleEvents': true,
-              'maxResults': environment.gapiConfig.maxResults,
-              'orderBy': 'startTime',
-              'q': eventType,
-              'timeMin': new Date().toISOString()
-            })
-              .then((response) => {
-                let events = new Array<GoogleEvent>();
-                response.result.items.forEach(event => {
-                  events.push(new GoogleEvent(event));
-                });
-                resolve(events);
-              })
-              .catch((reason) => {
-                console.error(reason);
-                reject(undefined);
-              });
-          });
-      });
-    });
 
+      if (!this.gapiLoaded) {
+        gapi.load("client", () => {
+          this.initClient()
+            .then(() => {
+              this.getEventsFromGapi(eventType)
+                .then((googleEvents) => {
+                  this.gapiLoaded = true;
+                  resolve(googleEvents);
+                })
+                .catch((result) => reject(result));
+            });
+        });
+      } else {
+        this.getEventsFromGapi(eventType)
+          .then((googleEvents) => {
+            resolve(googleEvents);
+          })
+          .catch((result) => reject(result));
+      }
+    });
+  }
+
+  private getEventsFromGapi(eventType: string): Promise<Array<GoogleEvent>> {
+    return new Promise<Array<GoogleEvent>>((resolve, reject) => {
+
+      gapi.client.calendar.events.list({
+        'calendarId': environment.gapiConfig.calendarId,
+        'showDeleted': false,
+        'singleEvents': true,
+        'maxResults': environment.gapiConfig.maxResults,
+        'orderBy': 'startTime',
+        'q': eventType,
+        'timeMin': new Date().toISOString()
+      })
+        .then((response) => {
+          let events = new Array<GoogleEvent>();
+          response.result.items.forEach(event => {
+            events.push(new GoogleEvent(event));
+          });
+          resolve(events);
+        })
+        .catch((reason) => {
+          console.error(reason);
+          reject(undefined);
+        });
+    });
   }
 
   private initClient(): Promise<boolean> {
