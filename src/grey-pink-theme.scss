@@ -1,0 +1,17 @@
+@import '~@angular/material/theming';
+@include mat-core();
+
+$grey-pink-primary: mat-palette($mat-gray, A700, A400, 900);
+$grey-pink-accent: mat-palette($mat-pink, A100, A200, A400);
+$grey-pink-warn: mat-palette($mat-red, A200, A400, A700);
+
+$grey-pink-theme: mat-dark-theme($grey-pink-primary, $grey-pink-accent, $grey-pink-warn);
+
+@include angular-material-theme($grey-pink-theme);
+
+:root {
+    --primary: rgb(66,66,66);
+    --accent: #ff80ab;
+    --warn: #ff5252;
+    --primaryContrast: papayawhip;
+}

@@ -1,0 +1,52 @@
+<div class="contentWrapper">
+    <form class="flexColumn" [formGroup]="filters">
+        <button class="add" mat-flat-button color="accent" type="button" (click)="addFilter()">
+            <mat-icon color="primary">find_in_page</mat-icon>
+            Add Filter
+        </button>
+        <ng-container *ngFor="let formGroup of filters.controls; let i = index" class="filters">
+            <div [formGroup]="formGroup">
+                <mat-form-field color="accent" appearance="standard" class="filter" (keyup)="setFilters()">
+                    <mat-label>Filter {{i + 1}}</mat-label>
+                    <input matInput formControlName="value">
+                </mat-form-field>
+                <button mat-mini-fab color="warn" class="removeFilter" (click)="removeFilter(i)" type="button">
+                    <mat-icon>delete</mat-icon>
+                </button>
+            </div>
+        </ng-container>
+    </form>
+    <div class="events">
+        <ng-container *ngIf="type === 'speaking'; else elseTemplate">
+            <div class="event" *ngFor="let event of speakingEvents">
+                <div class="info" [ngClass]="{'tbcEvent': event.tbc}">
+                    <h1>{{ event.summary }}</h1>
+                    <h3>{{ event.title }}</h3>
+                    <p>{{ event.extraInfo }}</p>
+                    <p>{{ getStartDate(event) }}</p>
+                </div>
+                <div class="buttons">
+                    <mat-icon tabindex="0" color="accent" class="button" (click)="openMaps(event)">location_on
+                    </mat-icon>
+                    <span>|</span>
+                    <mat-icon tabindex="0" color="accent" class="button" (click)="openEvent(event)">calendar_today
+                    </mat-icon>
+                </div>
+            </div>
+        </ng-container>
+        <ng-template #elseTemplate>
+            <div class="event" *ngFor="let event of presidingEvents">
+                <div class="info">
+                    <h1>{{ event.summary }}</h1>
+                    <p>{{ event.description }}</p>
+                    <p>{{ getStartDate(event) }}</p>
+                </div>
+                <div class="buttons">
+                    <mat-icon color="accent" class="button" (click)="openMaps(event)">location_on</mat-icon>
+                    <span>|</span>
+                    <mat-icon color="accent" class="button" (click)="openEvent(event)">calendar_today</mat-icon>
+                </div>
+            </div>
+        </ng-template>
+    </div>
+</div>

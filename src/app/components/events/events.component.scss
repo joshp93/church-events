@@ -1,0 +1,96 @@
+.events {
+    display: grid;
+    justify-content: center;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 300px));
+    column-gap: 1em;
+    row-gap: 1em;
+}
+.event {
+    display: flex;
+    flex-direction: column;
+    background-color: var(--primary);
+    color: var(--primaryContrast);
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.info {
+    padding: 1em;
+    margin: 1em;
+}
+.info.tbcEvent {
+    color: var(--warn);
+}
+form {
+    padding: 0.5em;
+    background-color: var(--primary);
+    color: var(--primaryContrast);
+    margin-bottom: 1em;
+    box-shadow: rgba(0, 0, 0, 0.35) 0px 5px 15px;
+}
+.add {
+    width: fit-content;
+    border-radius: 0px;
+    .mat-icon {
+        text-decoration: none;
+        background-image: linear-gradient(var(--primary), var(--primary));
+        background-size: 0% 2em;
+        background-position-y: 100%;
+        background-position-x: 0%;
+        background-repeat: no-repeat;
+        transition: background-size 0.2s ease-in-out;
+        padding: 4px;
+    }
+}
+.add:hover,
+.add:focus {
+    .mat-icon {
+        color: var(--accent);
+    }
+}
+.filter {
+    width: 90%;
+}
+.removeFilter {
+    margin-left: 1em;
+    width: 4em;
+    height: fit-content;
+    .mat-icon {
+        text-decoration: none;
+        background-image: linear-gradient(var(--primary), var(--primary));
+        background-size: 0% 2em;
+        background-position-y: 100%;
+        background-position-x: 0%;
+        background-repeat: no-repeat;
+        border-radius: 50%;
+        transition: background-size 0.2s ease-in-out;
+        padding: 4px;
+    }
+}
+button:hover,
+button:focus {
+    .mat-icon {
+        background-size: 100% 100%;
+    }
+}
+
+.buttons {
+    margin-top: auto;
+    display: flex;
+    flex-direction: row;
+    span {
+        padding-top: 0.25em;
+        font-size: 3em;
+    }
+}
+.button {
+    width: 50%;
+    text-align: center;
+    padding: 0.5em;
+}
+.button:hover,
+.button:focus {
+    cursor: pointer;
+    background-color: var(--accent);
+    color: var(--primary);
+    transition: background-color 0.2s ease-in-out;
+}
+

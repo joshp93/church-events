@@ -1,1 +1,32 @@
-/* You can add global styles to this file, and also import other style files */
+@import url('https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@200;300;400;600&display=swap');
+html,
+body {
+    height: 100%;
+    margin: 0;
+    font-family: 'IBM Plex Sans', Roboto, "Helvetica Neue", sans-serif;
+    border: 0px;
+    min-height: 100%;
+    background-image: url(./assets/ALS.png);
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-attachment: fixed;
+    background-color: var(--primary);
+}
+*:focus {
+    outline: none;
+}
+.contentWrapper {
+    width: 80%;
+    margin: auto;
+    padding-bottom: 3em;
+}
+.flexColumn {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.flexRow {
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+}
