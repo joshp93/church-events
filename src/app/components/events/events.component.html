@@ -4,6 +4,16 @@
             <mat-icon color="primary">find_in_page</mat-icon>
             Add Filter
         </button>
+        <div [formGroup]="dateFilter">
+            <mat-form-field appearance="standard" color="accent">
+                <mat-label>Date</mat-label>
+                <input matInput name="date" [matDatepicker]="date" formControlName="date"
+                    (dateChange)="setDateFilter()">
+                <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
+                <mat-datepicker #date></mat-datepicker>
+                <mat-error *ngIf="this.dateFilter.get('date').invalid">{{ this.dateFilter.get('date').errors.matDatepickerParse.text }} is not valid</mat-error>
+            </mat-form-field>
+        </div>
         <ng-container *ngFor="let formGroup of filters.controls; let i = index" class="filters">
             <div [formGroup]="formGroup">
                 <mat-form-field color="accent" appearance="standard" class="filter" (keyup)="setFilters()">

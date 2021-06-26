@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 import { environment } from 'src/environments/environment';
 import { GoogleEvent } from '../models/google-event.model';
 
@@ -9,33 +10,57 @@ declare var gapi: any;
 })
 export class GoogleCalendarService {
 
-  constructor() { }
+  private _dateFilter: Date;
+  private _eventType: string;
+  private dateChange: BehaviorSubject<Date>;
+  gapiEventsChange: BehaviorSubject<Array<GoogleEvent>> = new BehaviorSubject(undefined)
   gapiLoaded: boolean;
 
-  getCalendarEvents(eventType: string): Promise<Array<GoogleEvent>> {
+  public get dateFilter(): Date {
+    return this._dateFilter;
+  }
+  public set dateFilter(value: Date) {
+    this._dateFilter = value;
+    if (this.dateChange) {
+      this.dateChange.next(value);
+    }
+  }
 
-    return new Promise<Array<GoogleEvent>>((resolve, reject) => {
+  public get eventType(): string {
+    return this._eventType;
+  }
+  public set eventType(value: string) {
+    this._eventType = value;
+  }
 
+  constructor() {
+    this.dateFilter = new Date();
+    this.dateChange = new BehaviorSubject<Date>(this.dateFilter);
+    this.dateChange.subscribe(() => {
+      this.getCalendarEvents();
+    });
+  }
+
+  getCalendarEvents() {
       if (!this.gapiLoaded) {
         gapi.load("client", () => {
           this.initClient()
             .then(() => {
-              this.getEventsFromGapi(eventType)
+              this.getEventsFromGapi(this._eventType)
                 .then((googleEvents) => {
                   this.gapiLoaded = true;
-                  resolve(googleEvents);
+                  this.gapiEventsChange.next(googleEvents);
                 })
-                .catch((result) => reject(result));
+                .catch((result) => this.gapiEventsChange.error(result));
             });
         });
       } else {
-        this.getEventsFromGapi(eventType)
+        this.getEventsFromGapi(this._eventType)
           .then((googleEvents) => {
-            resolve(googleEvents);
+            this.gapiEventsChange.next(googleEvents);
           })
-          .catch((result) => reject(result));
+          .catch((result) => this.gapiEventsChange.error(result));
       }
-    });
   }
 
   private getEventsFromGapi(eventType: string): Promise<Array<GoogleEvent>> {
@@ -48,7 +73,7 @@ export class GoogleCalendarService {
         'maxResults': environment.gapiConfig.maxResults,
         'orderBy': 'startTime',
         'q': eventType,
-        'timeMin': new Date().toISOString()
+        'timeMin': this._dateFilter.toISOString()
       })
         .then((response) => {
           let events = new Array<GoogleEvent>();

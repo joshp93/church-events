@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { GoogleEvent } from 'src/app/models/google-event.model';
 import { GoogleCalendarService } from 'src/app/services/google-calendar.service';
@@ -18,18 +18,25 @@ export class EventsComponent implements OnInit {
   speakingEvents: Array<SpeakingEvent>;
   presidingEvents: Array<PresidingEvent>;
   inputForm: FormGroup;
+  dateFilter: FormGroup;
   filters: FormArray;
   filterTerms: Array<string>;
 
-  constructor(private route: ActivatedRoute, private googleCalendarService: GoogleCalendarService, private router: Router, private fb: FormBuilder) {
+  constructor(private route: ActivatedRoute, private googleCalendarService: GoogleCalendarService,
+      private router: Router, private fb: FormBuilder, private changeDetector: ChangeDetectorRef) {
     this.route.data.subscribe((value) => {
       this.type = value.type
-      this.getEvets();
+      this.googleCalendarService.eventType = this.type;
+      this.getEvents();
     });
   }
 
   ngOnInit(): void {
+    this.dateFilter = this.fb.group({
+      date: new FormControl(moment())
+    });
     this.filters = new FormArray([]);
+    this.setDateFilter();
   }
 
   addFilter() {
@@ -63,12 +70,14 @@ export class EventsComponent implements OnInit {
     console.log(event);
   }
 
-  getEvets() {
-    this.googleCalendarService.getCalendarEvents(this.type)
-      .then((gEvents) => {
-        this.events = gEvents
-        this.initTypedArray(this.events);
-      });
+  getEvents() {
+    this.googleCalendarService.gapiEventsChange.subscribe((gEvents) => {
+      if (!gEvents) return;
+      this.events = gEvents;
+      this.initTypedArray(this.events);
+      this.changeDetector.detectChanges();
+    });
+    this.googleCalendarService.getCalendarEvents();
   }
 
   initTypedArray(events: Array<GoogleEvent>) {
@@ -102,5 +111,11 @@ export class EventsComponent implements OnInit {
     if (!event.location) return
     let searchText = event.location.replace(" ", "+");
     window.open("https://www.google.com/maps/search/" + searchText);
+  }
+
+  setDateFilter() {
+    if (this.dateFilter.valid && this.dateFilter.value.date) {
+      this.googleCalendarService.dateFilter = this.dateFilter.value.date;
+    }
   }
 }
