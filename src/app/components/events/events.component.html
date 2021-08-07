@@ -37,13 +37,11 @@
                     <p>{{ getStartDate(event) }}</p>
                 </div>
                 <div class="buttons">
-                    <button aria-label="Open in maps">
-                        <mat-icon color="accent" (click)="openMaps(event)">location_on
-                        </mat-icon>
+                    <button aria-label="Open in maps" (click)="openMaps(event)">
+                        <mat-icon color="accent">location_on</mat-icon>
                     </button>
-                    <button class="lastButton" aria-label="Show in calendar">
-                        <mat-icon color="accent" class="button" (click)="openEvent(event)">calendar_today
-                        </mat-icon>
+                    <button class="lastButton" aria-label="Show in calendar" (click)="openEvent(event)">
+                        <mat-icon color="accent">calendar_today</mat-icon>
                     </button>
                 </div>
             </div>
@@ -56,9 +54,12 @@
                     <p>{{ getStartDate(event) }}</p>
                 </div>
                 <div class="buttons">
-                    <mat-icon color="accent" class="button" (click)="openMaps(event)">location_on</mat-icon>
-                    <span>|</span>
-                    <mat-icon color="accent" class="button" (click)="openEvent(event)">calendar_today</mat-icon>
+                    <button aria-label="Open in maps" (click)="openMaps(event)">
+                        <mat-icon color="accent">location_on</mat-icon>
+                    </button>
+                    <button class="lastButton" aria-label="Show in calendar" (click)="openEvent(event)">
+                        <mat-icon color="accent">calendar_today</mat-icon>
+                    </button>
                 </div>
             </div>
         </ng-template>

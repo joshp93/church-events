@@ -103,11 +103,11 @@ export class EventsComponent implements OnInit {
   }
 
   getStartDate(event: GoogleEvent) {
-    return moment(event.getStartDate()).toLocaleString();
+    return moment(event.getStartDate()).toDate().toUTCString();
   }
 
   getEndDate(event: GoogleEvent) {
-    return moment(event.getStartDate()).toLocaleString();
+    return moment(event.getStartDate()).toDate().toUTCString();
   }
 
   openEvent(event: GoogleEvent) {
