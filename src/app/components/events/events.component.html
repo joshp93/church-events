@@ -11,42 +11,46 @@
                     (dateChange)="setDateFilter()">
                 <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
                 <mat-datepicker #date></mat-datepicker>
-                <mat-error *ngIf="this.dateFilter.get('date').invalid">{{ this.dateFilter.get('date').errors.matDatepickerParse.text }} is not valid</mat-error>
+                <mat-error *ngIf="this.dateFilter.get('date').invalid">{{
+                    this.dateFilter.get('date').errors.matDatepickerParse.text }} is not valid</mat-error>
             </mat-form-field>
         </div>
         <ng-container *ngFor="let formGroup of filters.controls; let i = index" class="filters">
-            <div [formGroup]="formGroup">
+            <form [formGroup]="formGroup" class="filters">
                 <mat-form-field color="accent" appearance="standard" class="filter" (keyup)="setFilters()">
                     <mat-label>Filter {{i + 1}}</mat-label>
                     <input matInput formControlName="value">
                 </mat-form-field>
-                <button mat-mini-fab color="warn" class="removeFilter" (click)="removeFilter(i)" type="button">
-                    <mat-icon>delete</mat-icon>
+                <button class="removeFilter" (click)="removeFilter(i)">
+                    <mat-icon color="accent">close</mat-icon>
                 </button>
-            </div>
+            </form>
         </ng-container>
     </form>
     <div class="events">
         <ng-container *ngIf="type === 'speaking'; else elseTemplate">
             <div class="event" *ngFor="let event of speakingEvents">
-                <div class="info" [ngClass]="{'tbcEvent': event.tbc}">
+                <div class="info" [ngClass]="{'tbcEvent': event.tbc}" tabindex="0">
                     <h1>{{ event.summary }}</h1>
                     <h3>{{ event.title }}</h3>
                     <p>{{ event.extraInfo }}</p>
                     <p>{{ getStartDate(event) }}</p>
                 </div>
                 <div class="buttons">
-                    <mat-icon tabindex="0" color="accent" class="button" (click)="openMaps(event)">location_on
-                    </mat-icon>
-                    <span>|</span>
-                    <mat-icon tabindex="0" color="accent" class="button" (click)="openEvent(event)">calendar_today
-                    </mat-icon>
+                    <button aria-label="Open in maps">
+                        <mat-icon color="accent" (click)="openMaps(event)">location_on
+                        </mat-icon>
+                    </button>
+                    <button class="lastButton" aria-label="Show in calendar">
+                        <mat-icon color="accent" class="button" (click)="openEvent(event)">calendar_today
+                        </mat-icon>
+                    </button>
                 </div>
             </div>
         </ng-container>
         <ng-template #elseTemplate>
             <div class="event" *ngFor="let event of presidingEvents">
-                <div class="info">
+                <div class="info" tabindex="0">
                     <h1>{{ event.summary }}</h1>
                     <p>{{ event.description }}</p>
                     <p>{{ getStartDate(event) }}</p>

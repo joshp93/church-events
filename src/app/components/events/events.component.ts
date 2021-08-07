@@ -23,20 +23,28 @@ export class EventsComponent implements OnInit {
   filterTerms: Array<string>;
 
   constructor(private route: ActivatedRoute, private googleCalendarService: GoogleCalendarService,
-      private router: Router, private fb: FormBuilder, private changeDetector: ChangeDetectorRef) {
-    this.route.data.subscribe((value) => {
-      this.type = value.type
-      this.googleCalendarService.eventType = this.type;
-      this.getEvents();
-    });
+    private router: Router, private fb: FormBuilder, private changeDetector: ChangeDetectorRef) {
+      this.buildFilters();
+    }
+    
+    ngOnInit(): void {
+    this.subscribeToEvents();
   }
 
-  ngOnInit(): void {
+  private buildFilters() {
     this.dateFilter = this.fb.group({
       date: new FormControl(moment())
     });
     this.filters = new FormArray([]);
     this.setDateFilter();
+  }
+
+  private subscribeToEvents() {
+    this.route.data.subscribe((value) => {
+      this.type = value.type;
+      this.googleCalendarService.eventType = this.type;
+      this.getEvents();
+    });
   }
 
   addFilter() {
