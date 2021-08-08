@@ -8,7 +8,7 @@
             <mat-form-field appearance="standard" color="accent">
                 <mat-label>Date</mat-label>
                 <input matInput name="date" [matDatepicker]="date" formControlName="date"
-                    (dateChange)="setDateFilter()">
+                    (dateChange)="setDateFilter(true)">
                 <mat-datepicker-toggle matSuffix [for]="date"></mat-datepicker-toggle>
                 <mat-datepicker #date></mat-datepicker>
                 <mat-error *ngIf="this.dateFilter.get('date').invalid">{{
@@ -28,7 +28,7 @@
         </ng-container>
     </form>
     <div class="events">
-        <ng-container *ngIf="type === 'speaking'; else elseTemplate">
+        <ng-container *ngIf="googleCalendarService.eventType === 'speaking'; else elseTemplate">
             <div class="event" *ngFor="let event of speakingEvents">
                 <div class="info" [ngClass]="{'tbcEvent': event.tbc}" tabindex="0">
                     <h1>{{ event.summary }}</h1>

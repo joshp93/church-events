@@ -12,7 +12,6 @@ export class GoogleCalendarService {
 
   private _dateFilter: Date;
   private _eventType: string;
-  private dateChange: BehaviorSubject<Date>;
   gapiEventsChange: BehaviorSubject<Array<GoogleEvent>> = new BehaviorSubject(undefined)
   gapiLoaded: boolean;
 
@@ -21,9 +20,6 @@ export class GoogleCalendarService {
   }
   public set dateFilter(value: Date) {
     this._dateFilter = value;
-    if (this.dateChange) {
-      this.dateChange.next(value);
-    }
   }
 
   public get eventType(): string {
@@ -35,10 +31,6 @@ export class GoogleCalendarService {
 
   constructor() {
     this.dateFilter = new Date();
-    this.dateChange = new BehaviorSubject<Date>(this.dateFilter);
-    this.dateChange.subscribe(() => {
-      this.getCalendarEvents();
-    });
   }
 
   getCalendarEvents() {

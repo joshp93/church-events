@@ -25,4 +25,11 @@ button:hover,
 button:focus {
     color: var(--accent);
     background-size: 100% 100%;
+    .mat-icon {
+        color: var(--accent);
+    }
+}
+.lastButton {
+    margin-left: auto;
+    margin-right: 1em;
 }
